@@ -30,7 +30,7 @@ class Email {
             $mail->Port = 587; // Puerto recomendado para TLS
 
             // Remitente y destinatario
-            $mail->setFrom('juanmartinez@nusoft.com.co', 'Soporte educa.city'); // Cambia al email que usarás como remitente
+            $mail->setFrom('juanmartinez@nusoft.com.co', 'Soporte educa.city');
             $mail->addAddress($this->email, $this->nombre);
 
             // Contenido del correo
@@ -54,13 +54,13 @@ class Email {
             $mail->isSMTP();
             $mail->Host = 'smtp.sendgrid.net'; // Servidor SMTP de SendGrid
             $mail->SMTPAuth = true;
-            $mail->Username = 'apikey'; // Usuario SMTP (literalmente "apikey")
-            $mail->Password = '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'; // Tu clave API de SendGrid
+            $mail->Username = 'apikey'; // Usuario SMTP
+            $mail->Password = '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'; //clave API de SendGrid
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Cifrado TLS
             $mail->Port = 587; // Puerto recomendado para TLS
 
             // Remitente y destinatario
-            $mail->setFrom('juanmartinez@nusoft.com.co', 'Soporte educa.city'); // Cambia al email que usarás como remitente
+            $mail->setFrom('juanmartinez@nusoft.com.co', 'Soporte educa.city');
             $mail->addAddress($this->email, $this->nombre);
 
             // Contenido del correo
