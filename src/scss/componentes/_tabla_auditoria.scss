@@ -1,0 +1,10 @@
+#tabla-soluciones-auditoria{
+    width: 100%;
+    table-layout: fixed;
+}
+/* Aumentar el ancho de las dos primeras columnas */
+#tabla-soluciones-auditoria th:first-child,
+#tabla-soluciones-auditoria td:first-child {
+    width: 10% !important;
+    text-align: center;
+}

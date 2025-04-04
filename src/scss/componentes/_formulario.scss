@@ -1,0 +1,82 @@
+@use "sass:color";
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.formulario{
+    margin-top: 3rem;
+    width: 100%;
+}
+
+.campo{
+    display: flex;
+    margin-bottom: 1rem;
+    align-items: center;
+    label{
+        flex: 0 0 10rem;
+    }
+    input{
+        flex: 1;
+        border: 1px solid v.$negro;
+        padding: calc(v.$separacion /4);
+        border-radius: 1rem;
+
+        &:disabled{
+            background-color: color.adjust(v.$gris, $lightness: -30%);
+            color: v.$blanco;
+            cursor: not-allowed;
+        }
+    }
+}
+.campo-corto{
+    display: flex;
+    margin-bottom: 1rem;
+    align-items: center;
+    max-width: 40%;
+    label{
+        flex: 0 0 10rem;
+    }
+    input{
+        flex: 1;
+        border: none;
+        padding: calc(v.$separacion /4);
+        border-radius: 1rem;
+
+        &:disabled{
+            background-color: color.adjust(v.$gris, $lightness: -20%);
+            color: v.$verdePrincipal;
+            cursor: not-allowed;
+        }
+    }
+}
+.campo-corto-centrado{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    align-items: center;
+    width: 60%;
+    label{
+        flex: 0 0 10rem;
+    }
+    input{
+        flex: 1;
+        border: 1px solid v.$negro;
+        padding: calc(v.$separacion /4);
+        border-radius: 1rem;
+
+        &:disabled{
+            background-color: color.adjust(v.$gris, $lightness: -30%);
+            color: v.$negro;
+            cursor: not-allowed;
+            border: none;
+        }
+    }
+}
+#editor{
+    height: 35rem;
+}
+.ql-editor img {
+    max-width: 10rem; /* Ajusta el ancho máximo */
+    height: 25rem; /* Mantiene la proporción */
+    display: block;
+    margin: 10px; /* Centrar imágenes */
+}

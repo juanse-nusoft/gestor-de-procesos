@@ -1,0 +1,26 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.acciones{
+    margin-top: calc(v.$separacion / 4);
+    @include m.tablet{
+        display:flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+    a{
+        color: v.$negro;
+        display: block;
+        margin-bottom: calc(v.$separacion /2);
+        text-align: center;
+        background-color: v.$verdePrincipalTr;
+        padding: 1.5rem;
+        font-weight: v.$bold;
+        border-radius: 1rem;
+
+        &:hover{
+            color: v.$blanco;
+            background-color: v.$verdePrincipal;
+        }
+    }
+}

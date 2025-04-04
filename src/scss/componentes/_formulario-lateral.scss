@@ -1,0 +1,25 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.principal{
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+
+    .detalle-solucion{
+        width: 75%;
+    }
+    .informacion-solucion{
+        background-color: v.$gris;
+        padding: 1rem;
+        border: none;
+
+    }
+    .campo-corto{
+
+        &:disabled{
+            color: v.$blanco;
+        }
+    }
+}

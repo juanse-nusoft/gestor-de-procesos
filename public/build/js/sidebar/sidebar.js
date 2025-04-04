@@ -1,0 +1,1 @@
+const sidebar=document.getElementById("sidebar"),toggleBtn=document.getElementById("toggleBtn");toggleBtn.addEventListener("click",(()=>{sidebar.classList.toggle("expanded")})),document.addEventListener("DOMContentLoaded",(()=>{let e=document.body;"activado"===localStorage.getItem("modo-oscuro")?e.classList.add("active"):e.classList.remove("active")}));

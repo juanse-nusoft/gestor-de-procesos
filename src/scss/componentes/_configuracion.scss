@@ -1,0 +1,80 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+/*
+#opciones-usuario{
+    background-color: v.$gris;
+    position: relative;
+    width: 8rem;
+    height: 40px;
+    box-shadow: inset 4px 4px 6px #cecece,
+                inset -4px -4px 6px #cecece;
+    border-radius: 2.5rem;
+    cursor: pointer;
+}
+.toggle-config{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4rem;
+    height: 4rem;
+    transform: scale(.7);
+    background-color: v.$verdePrincipalTr;
+    border-radius: 25px;
+    box-shadow: 3px 3px 8px #c4c4c4
+                -3px -3px 8px #fff;
+}
+
+#opciones-usuario.active .toggle-config {
+    left: 4rem;
+}
+
+
+*/
+body.active{
+    background-color: rgb(21, 21, 22);
+    
+    h1, h3{
+        color: #fff;
+    }
+    p{
+        color: #fff;
+    }
+    #opciones-usuario{
+        background-color: darkcyan;
+    }
+    input{
+        background-color: v.$negro;
+        color: v.$blanco;
+    }
+}
+.toggle-switch {
+    background-color: v.$gris;
+    position: relative;
+    width: 5rem;
+    height: 25px;
+    box-shadow: inset 4px 4px 6px #cecece,
+                inset -4px -4px 6px #cecece;
+    border-radius: 2.5rem;
+    cursor: pointer;
+}
+
+.toggle-switch::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    transform: scale(0.7);
+    background-color: v.$verdeSecundario;
+    border-radius: 25px;
+    box-shadow: 3px 3px 8px #c4c4c4, 
+                -3px -3px 8px #fff;
+    transition: left 0.3s ease;
+}
+
+.toggle-switch.active::before {
+    left: 2.5rem;
+    background-color: v.$verdePrincipal;
+}

@@ -1,0 +1,27 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.input-buscador{
+    border-radius: 1px solid v.$gris;
+    background-color: v.$gris;
+    color: v.$negro;
+    border: none;
+    height: 3.5rem;
+    margin-right: 1rem;
+}
+.text-buscador{
+    width: 30rem;
+}
+.boton-tabla{
+    cursor: pointer;
+    background-color: v.$verdePrincipal;
+    color: v.$blanco;
+    font-weight: v.$bold;
+    padding: 1rem;
+    border-radius: 1rem;
+
+    &:hover{
+        background-color: v.$verdeSecundario;
+        color: v.$blanco;
+    }
+}

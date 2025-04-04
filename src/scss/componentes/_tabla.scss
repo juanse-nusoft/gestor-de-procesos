@@ -1,0 +1,92 @@
+@use "sass:color";
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.contenedor{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.principal{
+    margin-top: 2rem;
+}
+
+.titulo-tabla th, .titulo-tabla td{
+    background-color: v.$gris;
+    padding: 1rem;
+}
+
+#tabla-soluciones{
+    width: 100%;
+}
+/* Aumentar el ancho de las dos primeras columnas */
+#tabla-soluciones th:nth-child(1),
+#tabla-soluciones td:nth-child(1) {
+    width: 30%;
+}
+
+#tabla-soluciones th:nth-child(2),
+#tabla-soluciones td:nth-child(2) {
+    width: 50%;
+}
+#tabla-soluciones th:nth-child(3),
+#tabla-soluciones td:nth-child(3) {
+    width: 12%;
+}
+#tabla-soluciones th:nth-child(3),
+#tabla-soluciones td:nth-child(3) {
+    width: 8%;
+}
+.agregar{
+    line-height: 2;
+}
+.agregar > a{
+    padding: .5rem;
+}
+
+table, th{
+    border-collapse: collapse;
+    padding: .6rem;
+    text-align: center;
+}
+
+td {
+    height: 1rem; /* Fija la altura */
+    max-height: 1rem; /* Límite máximo de altura */
+    overflow: hidden; /* Oculta el contenido excedente */
+    text-overflow: ellipsis; /* Agrega "..." si el texto es muy largo */
+    white-space: nowrap; /* Evita saltos de línea */
+    text-align: left; /* Centra el texto horizontalmente */
+    line-height: 1rem; /* Ajusta la altura de línea para evitar desbordes */
+    max-width: 15rem;
+    padding: 1rem;
+    font-size: 1.4rem;
+}
+tbody tr:nth-child(even){
+    background-color: #eeeef5;
+}
+tbody tr:hover{
+    background-color: #d0d3d3;
+    color: #000;
+    cursor: pointer;
+}
+.boton-acciones{
+    
+    .tabla-acciones{
+        background-color: v.$verdePrincipal;
+        color: v.$blanco;
+        padding: .2rem;
+    }
+    .tabla-acciones:hover{
+        background-color: v.$verdeSecundario;
+    }
+}
+select{
+    border: none;
+    padding: .5rem;
+    background-color: v.$gris;
+    border-radius: 1rem;
+}
+.descripcion_auditoria{
+    font-size: 1.2rem;
+}

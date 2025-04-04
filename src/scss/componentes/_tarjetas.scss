@@ -1,0 +1,66 @@
+@use "sass:color";
+@use 'base/variables' as v;
+.general{
+    display: flex;
+    justify-content: space-around;
+
+    .tarjetas{
+        background-color: rgb(223, 223, 223);
+        width: 100%;
+        height: 25rem;
+        min-height: 25%;
+        padding: 1rem;
+        margin: .5rem;
+        border-radius: 1.5rem;
+        overflow: auto;
+
+        &:hover{
+            transform: scale(1.01);
+            transition: transform .3s ease;
+            box-shadow: 1px 2px 10px 1px #cecece;
+        }
+        .circulo{
+            width: 1rem;
+            height: 1rem;
+            border-radius: 5rem;
+            background-color: v.$rojo;
+        }
+    }
+    .tarjetas::-webkit-scrollbar{
+        width: .7rem;
+    }
+    .tarjetas::-webkit-scrollbar-thumb{
+        background-color: v.$verdeSecundario;
+        border-radius: 4px;
+    }
+    .tarjetas::-webkit-scrollbar-thumb:hover{
+        background-color: v.$verdePrincipal;
+    }
+    .tabla_tareas{
+        min-width: 100%;
+        
+        tr{
+            border-radius: 1rem;
+        }
+    }
+    .tabla_tareas td:nth-child(3) {
+        width: 5%;
+    }
+    .tabla_tareas td:nth-child(2) {
+        width: 25%;
+    }
+    //
+    .tabla_soluciones_open{
+        min-width: 100%;
+        
+        tr{
+            border-radius: 1rem;
+            i{
+                font-size: 2rem;
+            }
+        }
+    }
+    .tabla_soluciones_open td:nth-child(2) {
+        width: 15%;
+    }
+}

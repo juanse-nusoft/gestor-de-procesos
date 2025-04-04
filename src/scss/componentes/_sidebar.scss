@@ -1,0 +1,70 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+.sidebar {
+    height: 100vh;
+    width: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: v.$verdePrincipal;
+    color: white;
+    overflow-x: hidden;
+    transition: width 0.5s;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+/* Sidebar expandido */
+.sidebar.expanded {
+    width: 250px;
+}
+
+/* Contenido principal */
+#main {
+    margin-left: 60px; /* Margen predeterminado para el estado reducido */
+    padding: 20px;
+    transition: margin-left 0.5s;
+}
+
+/* Links del sidebar */
+.sidebar a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    transition: color 0.3s;
+    overflow: hidden;
+    border-radius: 3rem;
+
+    &:hover{
+        background-color: v.$verdeSecundario;
+    }
+}
+
+.sidebar a i {
+    font-size: 24px;
+}
+
+.sidebar a span {
+    display: none;
+    margin-left: 10px;
+}
+
+/* Mostrar texto en el estado expandido */
+.sidebar.expanded a span {
+    display: inline-block;
+}
+
+/* Ícono de menú */
+#toggleBtn {
+    font-size: 30px;
+    cursor: pointer;
+    max-width: 50px;
+    font-size: 3rem;
+    margin: 0 auto;
+}

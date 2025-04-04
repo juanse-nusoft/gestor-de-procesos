@@ -1,0 +1,27 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.boton{
+    @include m.boton(v.$verdePrincipal, v.$blanco);
+}
+.boton-eliminar{
+    @include m.boton(v.$rojo, v.$blanco);
+}
+.informativo{
+    display: block;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.informativo a{
+    background-color: v.$verdePrincipal;
+    color: v.$blanco;
+    padding: 1rem;
+    font-weight: v.$bold;
+    border-radius: 1rem;
+
+    &:hover{
+        background-color: v.$verdeSecundario;
+    }
+}
+
