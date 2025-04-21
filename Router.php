@@ -41,7 +41,7 @@ class Router
         }
     }
 
-    public function render($view, $datos = [], $layout = 'layout-users') {
+    public function render($view, $datos = [], $layout = 'layout') {
         if (!class_exists('Model\Usuario')) {
             require_once __DIR__ . '/../Models/Usuario.php';
         }

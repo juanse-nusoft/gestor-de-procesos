@@ -5,35 +5,115 @@ namespace Controllers;
 use MVC\Router;
 use Model\Modulo;
 use Model\Soluciones;
+use Model\Usuario;
 
 class SolucionesController {
     public static function soluciones(Router $router) {
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-        isAuth();
-         // Consultar los módulos desde la base de datos
-         $modulos = Modulo::all();
+    if (!isset($_SESSION)) session_start();
+    isAuth();
     
-        $query = $_GET['query'] ?? ''; // Captura el término de búsqueda
-        $categoria = $_GET['categoria'] ?? ''; // Captura el término de búsqueda
-        $soluciones = [];
+    // Manejar petición de categorías por división (AJAX)
+    if (isset($_GET['get_categorias']) && isset($_GET['division'])) {
+        $modulo = new Modulo();
+        $modulo->division_id = $_GET['division'];
+        $categorias = $modulo->obtenerCategoriasPorDivision();
+        
+        header('Content-Type: application/json');
+        echo json_encode($categorias);
+        exit;
+    }
+
+    // Configuración de paginación
+    $paginaActual = $_GET['pagina'] ?? 1;
+    $solucionesPorPagina = 3;
     
-        if ($query || $categoria) {
-            // Si hay un término de búsqueda, filtra las soluciones
-            $soluciones = Soluciones::buscar($query, $categoria);
+    // Obtener datos del usuario
+    $usuario = $_SESSION['usuario'];
+    $usuarioObj = Usuario::find($usuario['id']);
+    $divisiones = $usuarioObj->obtenerDivisiones();
+    $divisionIds = array_column($divisiones, 'division_id');
+    
+    // Configurar filtros
+    $filtros = [
+        'query' => $_GET['query'] ?? '',
+        'categoria' => $_GET['categoria'] ?? '',
+        'pagina' => $paginaActual,
+        'por_pagina' => $solucionesPorPagina
+    ];
+    
+    // Lógica de filtrado por división
+    if ($usuarioObj->esAdmin()) {
+        if (empty($divisionIds)) {
+            $filtros['division_ids'] = null;
+        } elseif (!empty($_GET['division']) && in_array($_GET['division'], $divisionIds)) {
+            $filtros['division_ids'] = $_GET['division'];
         } else {
-            // Si no hay búsqueda, muestra todas las soluciones
-            $soluciones = Soluciones::solucionesConCategorias();
+            $filtros['division_ids'] = $divisionIds;
         }
+    } else {
+        $filtros['division_ids'] = $divisionIds;
+    }
+
+    // Obtener soluciones PAGINADAS (¡Solo esta llamada!)
+    $resultados = Soluciones::filtrarPaginado($filtros);
+    $soluciones = $resultados['soluciones'];
+    $totalSoluciones = $resultados['total'];
     
-        // Renderiza la vista con las soluciones filtradas o completas
-        $router->render('dashboard/soluciones', [
-            'soluciones' => $soluciones,
-            'query' => $query,
-            'modulos' => $modulos,
-            'categoria' => $categoria
-        ], 'layout-users');
+    // Calcular total de páginas
+    $totalPaginas = ceil($totalSoluciones / $solucionesPorPagina);
+    
+    $modulos = Modulo::all();
+    
+    // Detectar si es petición Fetch (AJAX)
+    $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+              strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    
+    if ($isAjax) {
+        ob_start();
+        include 'views/dashboard/soluciones/partials/tabla-soluciones.php';
+        $html = ob_get_clean();
+        echo $html;
+        exit;
+    }
+    
+    // Renderizar vista completa
+    $router->render('dashboard/soluciones', [
+        'soluciones' => $soluciones,
+        'query' => $filtros['query'],
+        'modulos' => $modulos,
+        'categoria' => $filtros['categoria'],
+        'divisiones' => $divisiones,
+        'division_actual' => $_GET['division'] ?? null,
+        'paginacion' => [
+            'pagina_actual' => $paginaActual,
+            'total_paginas' => $totalPaginas,
+            'total_soluciones' => $totalSoluciones,
+            'por_pagina' => $solucionesPorPagina
+        ]
+    ], 'layout-users');
+}
+    public static function getCategorias(Router $router) {
+        if (!isset($_SESSION)) session_start();
+        isAuth();
+        
+        $divisionId = $_GET['division_id'] ?? null;
+        //debuguear($divisionId);
+        
+        if (!$divisionId) {
+            header('Content-Type: application/json');
+            echo json_encode([]);
+            exit;
+        }
+        
+        // Obtener categorías para la división seleccionada
+        $modulo = new Modulo();
+        $modulo->division_id = $divisionId;
+        $categorias = $modulo->obtenerCategoriasPorDivision();
+        //debuguear($categorias);
+        
+        header('Content-Type: application/json');
+        echo json_encode($categorias);
+        exit;
     }
 
     public static function detalle(Router $router) {
@@ -53,16 +133,36 @@ class SolucionesController {
     
         // Buscar la solución por su ID
         $solucion = Soluciones::find($id);
-    
+        
         if (!$solucion) {
             // Redirigir si la solución no existe
             header('Location: /dashboard/soluciones');
             exit;
         }
-    
+        $division_proceso = $solucion->datos_proceso();
+
+        // Verificar que tenemos datos válidos
+        if(empty($division_proceso)) {
+            header('Location: /dashboard/soluciones');
+            exit;
+        }
+
+
+        $modulo = new Modulo();
+        $modulo->division_id = $solucion->division;
+        //Hasta aquí vamos bien.
+
+        $categorias = $modulo->obtenerCategoriasPorDivision();
+        // Convertir arrays a objetos
+        $categorias = array_map(function($cat) {
+            return new Modulo($cat);
+        }, $categorias);
+        //debuguear($categorias);
         // Renderizar la vista de detalles
         $router->render('dashboard/soluciones/detalle', [
-            'solucion' => $solucion
+            'solucion' => $solucion,
+            'division' => $division_proceso,
+            'categorias' => $categorias
         ], 'layout-users');
     }
     public static function crear(Router $router) {
@@ -70,7 +170,7 @@ class SolucionesController {
             session_start();
         }
         isAuth();
-    
+        //debuguear($_SESSION);
         // Obtener las categorías (módulos) para el select
         $modulos = Modulo::all();
     
@@ -95,14 +195,19 @@ class SolucionesController {
                     echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios']);
                     return;
                 }
+                
+                
                 $id = ($_POST['id']);
                 $titulo = s($_POST['titulo']);
                 $categoria = $_POST['categoria'];
                 $descripcion = $_POST['descripcion'];
                 $video = s($_POST['video']);
-                $usuario_id = $_SESSION['id'];
+                $usuario_id = $_SESSION['usuario']['id'];
                 $short_description = $_POST['short-description'];
-    
+                
+                //debuguear($categoria);
+                
+
                 // Crear y guardar la solución
                 $solucion = new Soluciones([
                     'id' => $id,
@@ -167,26 +272,58 @@ class SolucionesController {
         }
     }
 
-    public static function editar(Router $router){
-        if (!isset($_SESSION)) {
-            session_start();
-        }
+    public static function editar(Router $router) {
+        if (!isset($_SESSION)) session_start();
         isAuth();
-
+    
         $id = $_GET['id'] ?? '';
         if (!$id) {
-            // Redirigir si no se proporciona un ID
             header('Location: /dashboard/soluciones');
             exit;
         }
+    
         // Buscar la solución por su ID
         $solucion = Soluciones::solucionEditar($id);
-        // Obtener las categorías (módulos) para el select
-        $modulos = Modulo::all();
+        if (!$solucion) {
+            header('Location: /dashboard/soluciones');
+            exit;
+        }
+    
+        // Obtener el usuario actual
+        $usuario = $_SESSION['usuario'];
+        $usuarioObj = Usuario::find($usuario['id']);
+    
+        // Obtener las divisiones del usuario
+        $divisionesUsuario = $usuarioObj->obtenerDivisiones();
+
+        // Obtener las categorías para la división de la solución
+        $modulo = new Modulo();
+        $modulo->division_id = $solucion[0]->division;
+        $categorias = $modulo->obtenerCategoriasPorDivision();
+
+        // Convertir arrays a objetos
+        $categorias = array_map(function($cat) {
+            return new Modulo($cat);
+        }, $categorias);
+    
+        // Si el usuario es admin, mostrar todas las categorías de sus divisiones
+        if ($usuarioObj->esAdmin()) {
+            $divisionIds = array_column($divisionesUsuario, 'division_id');
+            if (!empty($divisionIds)) {
+                $categorias = Modulo::categoriasPorDivisiones($divisionIds);
+            }
+        }
+    
+        // En tu controlador, antes de renderizar la vista, verifica:
+        $solucion[0]->division = (int)$solucion[0]->division; // Asegura que sea número
+        $solucion[0]->categories = (int)$solucion[0]->categories; // Asegura que sea número
+        //debuguear($solucion[0]->categories);
+    
         // Renderizar la vista del formulario
         $router->render('dashboard/soluciones/editar', [
             'solucion' => $solucion,
-            'modulos' => $modulos
+            'modulos' => $categorias,
+            'divisiones' => $divisionesUsuario
         ], 'layout-users');
     }
     
@@ -220,5 +357,70 @@ class SolucionesController {
         }
     }
     
+    public static function actualizarDatosBasicosSolucion(Router $router){
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        isAuth();
+        
+        header('Content-Type: application/json');
 
+        try {
+            // Verificar método
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new Exception('Método no permitido', 405);
+            }
+            
+            // Leer el input JSON
+            $datos = json_decode(file_get_contents('php://input'), true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Error al decodificar JSON: ' . json_last_error_msg());
+            }
+            
+            // Validar datos básicos
+            if (empty($datos['solucion_id'])) {
+                throw new Exception('ID de solución no proporcionado');
+            }
+            
+            $solucion = Soluciones::find($datos['solucion_id']);
+            if (!$solucion) {
+                throw new Exception('Solución no encontrada');
+            }
+            
+            // Actualizar solo campos permitidos
+            $camposPermitidos = ['estado' => 'status', 'categoria' => 'categories'];
+            $actualizaciones = [];
+            
+            foreach ($camposPermitidos as $campoForm => $campoBD) {
+                if (isset($datos[$campoForm])) {
+                    $solucion->{$campoBD} = s($datos[$campoForm]);
+                    $actualizaciones[] = $campoBD;
+                }
+            }
+            
+            // Solo actualizar si hay cambios
+            if (!empty($actualizaciones)) {
+                $solucion->modification_date = date('Y-m-d H:i:s');
+                $resultado = $solucion->guardar();
+                
+                if (!$resultado) {
+                    throw new Exception('Error al guardar en la base de datos');
+                }
+            }
+            
+            echo json_encode([
+                'success' => true,
+                'message' => 'Solución actualizada correctamente'
+            ]);
+            
+        } catch (Exception $e) {
+            http_response_code($e->getCode() ?: 500);
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'error' => true
+            ]);
+        }
+    }
 }

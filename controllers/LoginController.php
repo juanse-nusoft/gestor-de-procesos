@@ -39,7 +39,8 @@ class LoginController {
                             'apellido' => $usuario->apellido,
                             'email' => $usuario->email,
                             'admin' => (int)$usuario->admin,
-                            'login_time' => time()
+                            'login_time' => time(),
+                            'division' => $usuario->obtenerDivisiones($usuario->id)
                         ];
     
                         // Redirección segura

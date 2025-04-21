@@ -8,13 +8,20 @@
     margin: 0 auto;
 
     .detalle-solucion{
-        width: 75%;
+        width: calc(75% - 370px); /* Resta el ancho del elemento fijo + margen */
+        margin-right: 370px; 
     }
-    .informacion-solucion{
+    .informacion-solucion {
+        position: fixed;
+        right: 20px; /* Ajusta según el margen que desees */
+        top: 100px;  /* Distancia desde la parte superior */
+        width: 350px; /* Mantén el ancho original */
         background-color: v.$gris;
         padding: 1rem;
         border: none;
-
+        height: 400px;
+        z-index: 100; /* Asegura que esté por encima de otros elementos */
+        overflow: hidden; 
     }
     .campo-corto{
 

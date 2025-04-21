@@ -2,16 +2,42 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
-.paginacion{
-    padding: v.$separacion 0;
-    @include m.telefono{
-        display: flex;
-        justify-content: space-between;
-    }
-    button{
-        margin: 0 0 1rem 0;
-    }
-    .ocultar{
-        visibility: hidden;
-    }
+.paginador {
+    display: block;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.paginador-info {
+    font-size: 12px;
+    color: #666;
+}
+
+.paginador-controles {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.paginador-boton {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.paginador-boton:hover {
+    background-color: v.$verdeSecundarioTr;
+}
+
+.paginador-boton.activo {
+    background-color: v.$verdeSecundario;
+    color: white;
+    border-color: #007bff;
 }

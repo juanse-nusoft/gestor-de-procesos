@@ -6,10 +6,25 @@
 .swal2-html-container {
     font-size: 20px; /* Tamaño del contenido */
 }
-.swal2-confirm {
-    font-size: 18px; /* Tamaño del texto */
-    padding: 15px 25px; /* Tamaño del botón */
-    border-radius: 10px; /* Opcional: redondear bordes */
-    min-width: 200px; /* Opcional: establecer un ancho mínimo */
+/* Estilos para igualar el tamaño de los botones */
+.alert-eliminar,
+.alert-cancelar {
+    padding: 10px 20px !important;
+    width: 120px !important; /* Mismo ancho para ambos */
+    margin: 0 5px !important;
+    font-weight: bold !important;
 }
+
+/* Color rojo para "Eliminar" */
+.alert-eliminar {
+    background-color: #d33 !important;
+    color: white !important;
+    font-weight: bold
+}
+.alert-cancelar {
+    background-color: #279a83 !important;
+    color: white !important;
+    font-weight: bold
+}
+
 

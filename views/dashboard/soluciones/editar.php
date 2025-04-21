@@ -1,3 +1,4 @@
+<?php //debuguear($modulos); ?>
 <div class="informativo">
     <div class="titulo">
         <h1>Editar</h1>
@@ -12,15 +13,38 @@
     <input type="hidden" name="id" value="<?php echo htmlspecialchars($solucion[0]->id); ?>">
         <label for="titulo">Titulo</label>
         <input type="text" id="titulo" name="titulo" value="<?php echo ($solucion[0]->title); ?>" required>
+        
+    </div>
+    <div class="campo">
+
+        <label for="division" <?php echo (count($divisiones) <= 1) ? 'style="display:none"' : ''; ?>>División</label>
+        <select id="division" name="division" required <?php echo (count($divisiones) <= 1) ? 'style="display:none"' : ''; ?>>
+        <option value="" disabled>Seleccione una división</option>
+        <?php foreach ($divisiones as $division): ?>
+            <option value="<?php echo $division->division_id; ?>"
+                <?php echo ($solucion[0]->division == $division->division_id) ? 'selected' : ''; ?>>
+                <?php echo htmlspecialchars($division->nombre); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
+        <label for="categoria">Categoría</label>
         <select id="categoria" name="categoria" required>
-            <option value="" disabled>Seleccione una categoría</option>
-            <?php foreach ($modulos as $modulo) : ?>
-                <option value="<?php echo $modulo->id; ?>" 
-                    <?php echo ($solucion[0]->categories == $modulo->id) ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($modulo->nombre); ?>
+        <?php 
+        $categoriaActual = $solucion[0]->categories ?? null;
+        $mostrarTodas = true; // Cambiar a false si quieres carga inicial vacía
+        
+        if ($mostrarTodas && !empty($modulos)): ?>
+            <?php foreach ($modulos as $modulo): ?>
+                <option value="<?= $modulo['id'] ?>"
+                    <?= ($categoriaActual == $modulo['id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($modulo['nombre']) ?>
                 </option>
             <?php endforeach; ?>
-        </select>
+        <?php else: ?>
+            <option value="" disabled>Categorías se cargarán al seleccionar división</option>
+        <?php endif; ?>
+    </select>
     </div>
     <div class="campo">
         <label for="short-description">Contexto: </label>

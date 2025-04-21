@@ -2,6 +2,10 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
+
+.principal-soluciones{
+    margin-top: 1rem;
+}
 .formulario{
     margin-top: 3rem;
     width: 100%;

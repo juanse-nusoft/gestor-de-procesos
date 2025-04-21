@@ -40,12 +40,16 @@ $router->get('/dashboard', [asesorController::class, 'index']);
 //CRUD SOLUCIONES
 $router->get('/dashboard/soluciones', [SolucionesController::class, 'soluciones']);
 $router->post('/dashboard/soluciones', [SolucionesController::class, 'eliminar']);
+$router->get('/dashboard/soluciones/get-categorias', [SolucionesController::class, 'getCategorias']);
 $router->get('/dashboard/soluciones/detalle', [SolucionesController::class, 'detalle']);
+$router->post('/dashboard/soluciones/detalle', [SolucionesController::class, 'actualizarDatosBasicosSolucion']);
 $router->get('/dashboard/soluciones/crear', [SolucionesController::class, 'crear']);
 $router->post('/dashboard/soluciones/crear', [SolucionesController::class, 'crear_post']);
 $router->post('/dashboard/soluciones/upload', [SolucionesController::class, 'upload']);
 $router->get('/dashboard/soluciones/editar', [SolucionesController::class, 'editar']);
 $router->post('/dashboard/soluciones/editar', [SolucionesController::class, 'crear_post']);
+$router->post('/dashboard/soluciones/categorias', [SolucionesController::class, 'categoria']);
+$router->get('/dashboard/soluciones/categorias', [SolucionesController::class, 'categoria']);
 
 //CRUD USUARIOS
 $router->get('/dashboard/usuarios', [usuarioController::class, 'usuario']);

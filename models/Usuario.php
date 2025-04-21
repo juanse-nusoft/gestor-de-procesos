@@ -157,5 +157,28 @@ class Usuario extends ActiveRecord{
         }
         return self::consultarSQL($query);
     }
+    public function obtenerDivisiones() {
+        $query = "SELECT d.division_id, d.nombre 
+                  FROM divisiones d
+                  JOIN usuario_division ud ON d.division_id = ud.division_id
+                  WHERE ud.usuario_id = ?";
+        
+        $stmt = self::$db->prepare($query);
+        $stmt->bind_param("i", $this->id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $divisiones = [];
+        
+        while ($fila = $result->fetch_assoc()) {
+            $divisiones[] = (object)$fila;
+        }
+        
+        return $divisiones;
+    }
+
+    public function esAdminConDivisiones() {
+        return $this->admin == 1 && !empty($this->obtenerDivisiones());
+    }
     
 } 

@@ -71,13 +71,18 @@ class ActiveRecord {
     }
 
     // Sanitizar los datos antes de guardarlos en la BD
-    public function sanitizarAtributos() {
-        $atributos = $this->atributos();
-        $sanitizado = [];
-        foreach($atributos as $key => $value ) {
-            $sanitizado[$key] = self::$db->escape_string($value);
+    protected function sanitizarAtributos() {
+        $atributos = [];
+        foreach (static::$columnasDB as $columna) {
+            if ($columna === 'id') continue;
+            
+            // Manejar valores nulos o vacíos
+            if (property_exists($this, $columna)) {
+                $value = $this->{$columna};
+                $atributos[$columna] = ($value === null || $value === '') ? null : $value;
+            }
         }
-        return $sanitizado;
+        return $atributos;
     }
 
     // Sincroniza BD con Objetos en memoria
@@ -89,6 +94,7 @@ class ActiveRecord {
         }
     }
 
+    /*
     // Registros - CRUD
     public function guardar() {
         $resultado = '';
@@ -100,6 +106,15 @@ class ActiveRecord {
             $resultado = $this->crear();
         }
         return $resultado;
+    }
+
+    */
+    public function guardar() {
+        if (!is_null($this->id)) {
+            return $this->actualizar();
+        } else {
+            return $this->crear();
+        }
     }
 
     // Todos los registros
@@ -163,8 +178,13 @@ class ActiveRecord {
 
         // Iterar para ir agregando cada campo de la BD
         $valores = [];
-        foreach($atributos as $key => $value) {
-            $valores[] = "{$key}='{$value}'";
+        foreach ($atributos as $key => $value) {
+            // Manejar valores NULL correctamente
+            if ($value === null || $value === '') {
+                $valores[] = "{$key}=NULL";
+            } else {
+                $valores[] = "{$key}='" . self::$db->escape_string($value) . "'";
+            }
         }
 
         // Consulta SQL
