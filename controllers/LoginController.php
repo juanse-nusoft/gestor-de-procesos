@@ -15,12 +15,13 @@ class LoginController {
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $auth = new Usuario($_POST);
             $alertas = $auth->validarLogin();
-    
-            if (empty($alertas)) {
-                // Consulta segura con prepared statements (versión mejorada)
-                $usuario = Usuario::where('email', $auth->email);
+            //debuguear($alertas);
+            
+            if (!empty($alertas)) {
                 
-                if ($usuario) {
+                $usuario = Usuario::where('email', $auth->email);
+                //debuguear($usuario);
+                if ($usuario !== NULL) {
                     if ($usuario->comprobarPasswordAndVerificado($auth->password)) {
                         // Configuración robusta de sesión
                         if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -47,10 +48,11 @@ class LoginController {
                         header('Location: /dashboard');
                         exit;
                     }
+                }else{
+                    // Mensaje genérico por seguridad
+                    Usuario::setAlerta('error', 'Credenciales incorrectas o cuenta no verificada');
                 }
-                
-                // Mensaje genérico por seguridad
-                Usuario::setAlerta('error', 'Credenciales incorrectas o cuenta no verificada');
+
             }
         }
     
@@ -73,9 +75,10 @@ class LoginController {
                 $auth = new Usuario($_POST);
                 $alertas = $auth->validarEmail();
 
-                if(empty($alertas)){
+                if(empty($alertas['error'])){
                     $usuario = Usuario::where('email', $auth->email);
-                    if($usuario && $usuario->confirmado === "1"){
+                    //debuguear($usuario);
+                    if($usuario && $usuario->estado === 1){
                         //Generar token de un solo uso
                         $usuario->crearToken();
                         $usuario->guardar();
@@ -143,6 +146,7 @@ class LoginController {
 
     public static function crear(Router $router){
         $usuario = new Usuario();
+        
         $divisiones = Divisiones::all();
         //Alertas vacias
         $alertas = [];
@@ -150,11 +154,11 @@ class LoginController {
             
             $usuario->sincronizar($_POST);
             $alertas = $usuario->validarNuevaCuenta();
+            //debuguear($alertas);
     
             //Revisar que alertas esté vacío
-            if(empty($alertas)){
+            if(empty($alertas['error'])){
                 $resultado = $usuario->existeUsuario();
-            
                 if($resultado->num_rows){
                     $alertas = Usuario::getAlertas();
                 } else {
@@ -167,7 +171,7 @@ class LoginController {
                     
                     if($resultadoCreacion['resultado']){
                         $relacion = new UsuarioDivision([
-                            'usuario_id' => $resultadoCreacion['id'], // CORRECCIÓN AQUÍ: usar $resultadoCreacion
+                            'usuario_id' => $resultadoCreacion['id'],
                             'division_id' => (int)$_POST['division'] // Convertimos a entero
                         ]);
                         
@@ -181,7 +185,7 @@ class LoginController {
                             exit;
                         } else {
                             // Si falla la relación, eliminar el usuario creado
-                            $usuario->eliminar($resultadoCreacion['id']); // CORRECCIÓN AQUÍ
+                            $usuario->eliminar($resultadoCreacion['id']);
                             Usuario::setAlerta('error', 'Error al asignar la división');
                         }
                     } else {

@@ -28,3 +28,19 @@
     </form>
 </div>
 
+
+<div class="modal-opciones-perfil" id="modalOpcionesPerfil">
+    <div class="modal-contenido">
+        <button class="opcion-modal" id="actualizarFoto">Actualizar foto</button>
+        <button class="opcion-modal" id="eliminarFoto">Eliminar foto</button>
+        <button class="opcion-modal cerrar-modal">Cancelar</button>
+    </div>
+</div>
+
+<input type="file" id="inputFotoPerfil" accept="image/*" style="display: none;">
+
+<?php
+$script = "
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    <script src='/build/js/modalPerfil.js'></script>
+"; ?>

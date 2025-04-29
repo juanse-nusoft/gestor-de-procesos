@@ -2,13 +2,10 @@
 
 require_once __DIR__ . '/../includes/app.php';
 
-use Controllers\AdminController;
-use Controllers\APIController;
 use Controllers\asesorController;
 use Controllers\AuditoriaController;
 use Controllers\configController;
 use Controllers\LoginController;
-use Controllers\ServicioController;
 use Controllers\SolucionesController;
 use Controllers\tareasController;
 use Controllers\usuarioController;

@@ -27,12 +27,12 @@
             </option>
         <?php endforeach; ?>
     </select>
-
-        <label for="categoria">Categoría</label>
+ 
+        <label for="categoria" class="margen-izquierdo">Categoría </label>
         <select id="categoria" name="categoria" required>
         <?php 
         $categoriaActual = $solucion[0]->categories ?? null;
-        $mostrarTodas = true; // Cambiar a false si quieres carga inicial vacía
+        $mostrarTodas = true; 
         
         if ($mostrarTodas && !empty($modulos)): ?>
             <?php foreach ($modulos as $modulo): ?>

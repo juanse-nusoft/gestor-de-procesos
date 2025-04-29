@@ -1,6 +1,7 @@
 export function validarEmail() {
     const email = document.getElementById('email').value.trim();
-    if (!email.includes('@nusoft.com.co')) {
+    let emailLower = email.toLowerCase();
+    if (!emailLower.includes('@nusoft.com.co')) {
         Swal.fire({
             icon: "error",
             title: "Fallaste...",
@@ -21,7 +22,7 @@ export function validarClave() {
         Swal.fire({
             icon: "error",
             title: "ERROR",
-            text: "Ingresa una contraseña válida, debe tener como mínimo 8 caracteres",
+            text: "Contraseña Incorrecta",
             customClass: {
                 title: 'swal-title',
                 content: 'swal-content',

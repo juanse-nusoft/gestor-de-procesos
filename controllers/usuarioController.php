@@ -33,7 +33,8 @@ class usuarioController{
             session_start();
         }
         isAuth();
-        $id = $_SESSION['id'];
+        //debuguear($_SESSION);
+        $id = $_SESSION['usuario']['id'];
         $usuario = Usuario::find($id);
 
     $router->render('dashboard/usuarios/perfil', [

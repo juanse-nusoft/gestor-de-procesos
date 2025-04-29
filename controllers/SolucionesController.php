@@ -12,7 +12,7 @@ class SolucionesController {
     if (!isset($_SESSION)) session_start();
     isAuth();
     
-    // Manejar petición de categorías por división (AJAX)
+    // Manejar petición de categorías por división
     if (isset($_GET['get_categorias']) && isset($_GET['division'])) {
         $modulo = new Modulo();
         $modulo->division_id = $_GET['division'];
@@ -54,7 +54,8 @@ class SolucionesController {
         $filtros['division_ids'] = $divisionIds;
     }
 
-    // Obtener soluciones PAGINADAS (¡Solo esta llamada!)
+    // Obtener soluciones PAGINADAS
+    
     $resultados = Soluciones::filtrarPaginado($filtros);
     $soluciones = $resultados['soluciones'];
     $totalSoluciones = $resultados['total'];
@@ -150,14 +151,13 @@ class SolucionesController {
 
         $modulo = new Modulo();
         $modulo->division_id = $solucion->division;
-        //Hasta aquí vamos bien.
 
         $categorias = $modulo->obtenerCategoriasPorDivision();
         // Convertir arrays a objetos
         $categorias = array_map(function($cat) {
             return new Modulo($cat);
         }, $categorias);
-        //debuguear($categorias);
+
         // Renderizar la vista de detalles
         $router->render('dashboard/soluciones/detalle', [
             'solucion' => $solucion,
@@ -170,13 +170,19 @@ class SolucionesController {
             session_start();
         }
         isAuth();
-        //debuguear($_SESSION);
-        // Obtener las categorías (módulos) para el select
-        $modulos = Modulo::all();
-    
+
+        // Obtener el usuario actual
+        $usuario = $_SESSION['usuario'];
+        $usuarioObj = Usuario::find($usuario['id']);
+
+        // Obtener las divisiones del usuario
+        $divisionesUsuario = $usuarioObj->obtenerDivisiones();
+        //debuguear($divisionesUsuario);
+        
+
         // Renderizar la vista del formulario
         $router->render('dashboard/soluciones/crear', [
-            'modulos' => $modulos
+            'divisiones' => $divisionesUsuario
         ], 'layout-users');
     }
     
@@ -314,10 +320,9 @@ class SolucionesController {
             }
         }
     
-        // En tu controlador, antes de renderizar la vista, verifica:
-        $solucion[0]->division = (int)$solucion[0]->division; // Asegura que sea número
-        $solucion[0]->categories = (int)$solucion[0]->categories; // Asegura que sea número
-        //debuguear($solucion[0]->categories);
+        $solucion[0]->division = (int)$solucion[0]->division;
+        $solucion[0]->categories = (int)$solucion[0]->categories;
+  
     
         // Renderizar la vista del formulario
         $router->render('dashboard/soluciones/editar', [

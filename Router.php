@@ -37,7 +37,7 @@ class Router
         if ($fn) {
             call_user_func($fn, $this);
         } else {
-            echo "No se ejecutó la función";
+            echo "Página no encontrada";
         }
     }
 

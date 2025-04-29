@@ -32,6 +32,7 @@
     }
 }
 .campo-corto{
+    margin-top: 1rem;
     display: flex;
     margin-bottom: 1rem;
     align-items: center;
@@ -83,4 +84,7 @@
     height: 25rem; /* Mantiene la proporción */
     display: block;
     margin: 10px; /* Centrar imágenes */
+}
+.margen-izquierdo{
+    margin-left: 1rem;
 }

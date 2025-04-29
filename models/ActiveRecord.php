@@ -30,20 +30,53 @@ class ActiveRecord {
     }
 
     // Consulta SQL para crear un objeto en Memoria
-    public static function consultarSQL($query) {
-        // Consultar la base de datos
-        $resultado = self::$db->query($query);
-
-        // Iterar los resultados
-        $array = [];
-        while($registro = $resultado->fetch_assoc()) {
-            $array[] = static::crearObjeto($registro);
+    public static function consultarSQL($query, $params = []) {
+        // Verificar conexión
+        if (!self::$db || !self::$db->ping()) {
+            throw new Exception("Error de conexión a la base de datos");
         }
-
-        // liberar la memoria
-        $resultado->free();
-
-        // retornar los resultados
+    
+        $stmt = self::$db->prepare($query);
+        if (!$stmt) {
+            throw new Exception("Error al preparar consulta: " . self::$db->error);
+        }
+    
+        // Bindear parámetros si existen
+        if (!empty($params)) {
+            $types = '';
+            $values = [];
+            
+            foreach ($params as $param) {
+                if (is_int($param)) {
+                    $types .= 'i'; // integer
+                } elseif (is_double($param)) {
+                    $types .= 'd'; // double
+                } else {
+                    $types .= 's'; // string
+                }
+                $values[] = $param;
+            }
+            
+            $stmt->bind_param($types, ...$values);
+        }
+    
+        // Ejecutar consulta
+        if (!$stmt->execute()) {
+            throw new Exception("Error al ejecutar consulta: " . $stmt->error);
+        }
+    
+        // Obtener resultados
+        $result = $stmt->get_result();
+        $array = [];
+        
+        if ($result) {
+            while ($registro = $result->fetch_assoc()) {
+                $array[] = static::crearObjeto($registro);
+            }
+            $result->free();
+        }
+        
+        $stmt->close();
         return $array;
     }
 
@@ -94,55 +127,56 @@ class ActiveRecord {
         }
     }
 
-    /*
-    // Registros - CRUD
     public function guardar() {
-        $resultado = '';
-        if(!is_null($this->id)) {
-            // actualizar
-            $resultado = $this->actualizar();
-        } else {
-            // Creando un nuevo registro
-            $resultado = $this->crear();
+        // Verificar conexión a la base de datos
+        if (!self::$db || !self::$db->ping()) {
+            throw new Exception("Error de conexión a la base de datos");
         }
-        return $resultado;
-    }
-
-    */
-    public function guardar() {
+    
+        // Sanitizar todos los atributos antes de guardar
+        $atributos = $this->sanitizarAtributos();
+        
+        // Determinar si es INSERT o UPDATE
         if (!is_null($this->id)) {
-            return $this->actualizar();
+            return $this->actualizar($atributos);
         } else {
-            return $this->crear();
+            return $this->crear($atributos);
         }
     }
 
     // Todos los registros
     public static function all() {
         $query = "SELECT * FROM " . static::$tabla;
-        $resultado = self::consultarSQL($query);
-        return $resultado;
+        return self::consultarSQL($query);
     }
 
     // Busca un registro por su id
     public static function find($id) {
-        $query = "SELECT * FROM " . static::$tabla  ." WHERE id = {$id}";
-        $resultado = self::consultarSQL($query);
-        return array_shift( $resultado ) ;
+        $query = "SELECT * FROM " . static::$tabla . " WHERE id = ? LIMIT 1";
+        $resultado = self::consultarSQL($query, [$id]);
+        return array_shift($resultado);
     }
 
     // Obtener Registros con cierta cantidad
     public static function get($limite) {
-        $query = "SELECT * FROM " . static::$tabla . " LIMIT {$limite}";
-        $resultado = self::consultarSQL($query);
-        return array_shift( $resultado ) ;
+        if (!is_numeric($limite)) {
+            throw new Exception("El límite debe ser numérico");
+        }
+        
+        $query = "SELECT * FROM " . static::$tabla . " LIMIT ?";
+        return self::consultarSQL($query, [$limite]);
     }
 
      // Busca un registro por su id
      public static function where($columna, $valor) {
-        $query = "SELECT * FROM " . static::$tabla  ." WHERE {$columna} = '{$valor}'";
-        $resultado = self::consultarSQL($query);
-        return array_shift( $resultado ) ;
+        // Validar nombre de columna para prevenir inyección
+        if (!in_array($columna, static::$columnasDB)) {
+            throw new Exception("Columna no válida");
+        }
+        
+        $query = "SELECT * FROM " . static::$tabla . " WHERE {$columna} = ? LIMIT 1";
+        $resultado = self::consultarSQL($query, [$valor]);
+        return array_shift($resultado);
     }
 
     //Consulta plana de SQL y usar cuando los modelos no son suficientes
@@ -152,60 +186,137 @@ class ActiveRecord {
     }
 
     // crea un nuevo registro
-    public function crear() {
-        // Sanitizar los datos
-        $atributos = $this->sanitizarAtributos();
-
-        // Insertar en la base de datos
-        $query = " INSERT INTO " . static::$tabla . " ( ";
-        $query .= join(', ', array_keys($atributos));
-        $query .= " ) VALUES ('"; 
-        $query .= join("', '", array_values($atributos));
-        $query .= "') ";
-
-        // Resultado de la consulta
-        $resultado = self::$db->query($query);
+    public function crear($atributos) {
+        // Construir la consulta SQL preparada
+        $columnas = implode(', ', array_keys($atributos));
+        $placeholders = implode(', ', array_fill(0, count($atributos), '?'));
+        
+        $query = "INSERT INTO " . static::$tabla . " ($columnas) VALUES ($placeholders)";
+        
+        // Preparar la consulta
+        $stmt = self::$db->prepare($query);
+        if (!$stmt) {
+            throw new Exception("Error al preparar consulta: " . self::$db->error);
+        }
+        
+        // Generar tipos para bind_param (s = string, i = integer, d = double)
+        $tipos = '';
+        $valores = [];
+        
+        foreach ($atributos as $valor) {
+            if (is_int($valor)) {
+                $tipos .= 'i';
+            } elseif (is_float($valor)) {
+                $tipos .= 'd';
+            } else {
+                $tipos .= 's';
+            }
+            $valores[] = $valor;
+        }
+        
+        // Vincular parámetros y ejecutar
+        $stmt->bind_param($tipos, ...$valores);
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Error al crear registro: " . $stmt->error);
+        }
+        
+        // Obtener el ID insertado
+        $nuevoId = self::$db->insert_id;
+        $this->id = $nuevoId;
+        
+        $stmt->close();
+        
         return [
-           'resultado' =>  $resultado,
-           'id' => self::$db->insert_id
+            'resultado' => true,
+            'id' => $nuevoId
         ];
     }
 
     // Actualizar el registro
-    public function actualizar() {
-        // Sanitizar los datos
-        $atributos = $this->sanitizarAtributos();
-
-        // Iterar para ir agregando cada campo de la BD
-        $valores = [];
-        foreach ($atributos as $key => $value) {
-            // Manejar valores NULL correctamente
-            if ($value === null || $value === '') {
-                $valores[] = "{$key}=NULL";
-            } else {
-                $valores[] = "{$key}='" . self::$db->escape_string($value) . "'";
-            }
+    protected function actualizar($atributos) {
+        // Validar que exista ID
+        if (is_null($this->id)) {
+            throw new Exception("No se puede actualizar un registro sin ID");
         }
-
-        // Consulta SQL
-        $query = "UPDATE " . static::$tabla ." SET ";
-        $query .=  join(', ', $valores );
-        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
-        $query .= " LIMIT 1 "; 
-
-        // Actualizar BD
-        $resultado = self::$db->query($query);
-        return $resultado;
+    
+        // Construir partes SET de la consulta
+        $setParts = [];
+        $valores = [];
+        $tipos = '';
+        
+        foreach ($atributos as $columna => $valor) {
+            $setParts[] = "$columna = ?";
+            
+            if (is_int($valor)) {
+                $tipos .= 'i';
+            } elseif (is_float($valor)) {
+                $tipos .= 'd';
+            } else {
+                $tipos .= 's';
+            }
+            
+            $valores[] = $valor;
+        }
+        
+        // Añadir ID al final para el WHERE
+        $valores[] = $this->id;
+        $tipos .= 'i';
+        
+        // Construir consulta completa
+        $query = "UPDATE " . static::$tabla . " SET " . implode(', ', $setParts) . 
+                 " WHERE id = ? LIMIT 1";
+        
+        // Preparar y ejecutar
+        $stmt = self::$db->prepare($query);
+        if (!$stmt) {
+            throw new Exception("Error al preparar consulta: " . self::$db->error);
+        }
+        
+        $stmt->bind_param($tipos, ...$valores);
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Error al actualizar registro: " . $stmt->error);
+        }
+        
+        $affectedRows = $stmt->affected_rows;
+        $stmt->close();
+        
+        return $affectedRows > 0;
     }
 
     // Eliminar un Registro por su ID
     public static function eliminar($id) {
-        $id = self::$db->escape_string($id);
-        $query = "DELETE FROM " . static::$tabla . " WHERE id = $id LIMIT 1";
-        $resultado = self::$db->query($query);
-        return $resultado;
+        // Validar conexión
+        if (!self::$db || !self::$db->ping()) {
+            throw new Exception("Error de conexión a la base de datos");
+        }
+    
+        // Validar ID
+        if (!is_numeric($id) || $id <= 0) {
+            throw new InvalidArgumentException("ID de eliminación no válido");
+        }
+    
+        // Consulta preparada
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = ? LIMIT 1";
+        $stmt = self::$db->prepare($query);
+        
+        if (!$stmt) {
+            throw new Exception("Error al preparar consulta de eliminación: " . self::$db->error);
+        }
+    
+        // Vincular parámetro y ejecutar
+        $stmt->bind_param("i", $id);
+        $resultado = $stmt->execute();
+        
+        if (!$resultado) {
+            throw new Exception("Error al eliminar registro: " . $stmt->error);
+        }
+    
+        // Verificar si realmente se eliminó algo
+        $filasAfectadas = $stmt->affected_rows;
+        $stmt->close();
+    
+        return $filasAfectadas > 0;
     }
-    
-    
-
 }

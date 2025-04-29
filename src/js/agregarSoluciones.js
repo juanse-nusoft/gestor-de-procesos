@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             });
     }//Cierra la función enviar formulario
 
-    // Evento de pegado de imágenes (opcional)
+    // Evento de pegado de imágenes
     quill.root.addEventListener("paste", function(event) {
         let items = (event.clipboardData || event.originalEvent.clipboardData).items;
         for (let item of items) {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
         let contenidoHTML = quill.root.innerHTML;
         let formData = new FormData(this);
     
-        // Extraer imágenes en Base64 (expresión regular mejorada)
+        // Extraer imágenes en Base64
         let images = contenidoHTML.match(/<img[^>]+src="(data:image\/[^;]+;base64,[^"]+)"/g);
     
         if (images) {

@@ -1,36 +1,7 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
-/*
-#opciones-usuario{
-    background-color: v.$gris;
-    position: relative;
-    width: 8rem;
-    height: 40px;
-    box-shadow: inset 4px 4px 6px #cecece,
-                inset -4px -4px 6px #cecece;
-    border-radius: 2.5rem;
-    cursor: pointer;
-}
-.toggle-config{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4rem;
-    height: 4rem;
-    transform: scale(.7);
-    background-color: v.$verdePrincipalTr;
-    border-radius: 25px;
-    box-shadow: 3px 3px 8px #c4c4c4
-                -3px -3px 8px #fff;
-}
 
-#opciones-usuario.active .toggle-config {
-    left: 4rem;
-}
-
-
-*/
 body.active{
     background-color: rgb(21, 21, 22);
     
@@ -46,6 +17,24 @@ body.active{
     input{
         background-color: v.$negro;
         color: v.$blanco;
+    }
+    .sidebar{
+        background-color: #1d1d1d;
+    }
+    .input-buscador{
+        background-color:  #424642;
+        color: #fff;
+    }
+    .titulo-tabla th, .titulo-tabla td{
+        background-color:  #424642;
+        color: #fff;
+    }
+    tbody tr:nth-child(even){
+        background-color: #252424;
+        color: #ffffff;
+    }
+    tr{
+        color: #ffffff;
     }
 }
 .toggle-switch {

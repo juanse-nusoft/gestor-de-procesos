@@ -7,7 +7,7 @@
                placeholder="Busca por palabra clave" value="<?php echo htmlspecialchars($_GET['query'] ?? ''); ?>">
         
                <?php 
-                // Obtener el ID de división (ya sea de GET o de la única división disponible)
+                
                 $divisionId = $_GET['division'] ?? ($divisiones[0]->division_id ?? null);
                 ?>
 
@@ -129,7 +129,7 @@
         <?php endif; ?>
         
         <?php 
-        // Mostrar números de página (hasta 5 alrededor de la actual)
+        
         $inicio = max(1, $paginacion['pagina_actual'] - 2);
         $fin = min($paginacion['total_paginas'], $paginacion['pagina_actual'] + 2);
         

@@ -1,3 +1,6 @@
+<?php
+    //debuguear($divisiones);
+?>
 <div class="informativo">
     <div class="titulo">
         <h1>Agregar nuevo proceso</h1>
@@ -11,14 +14,27 @@
     <div class="campo">
         <label for="titulo">Titulo</label>
         <input type="text" id="titulo" name="titulo" placeholder="Ingresa el titulo a crear" required>
-        <label for="categoria">Categoría:</label>
+        
+    </div>
+    <div class="campo">
+        <label for="division" <?php echo (count($divisiones) <= 1) ? 'style="display:none"' : ''; ?>>División</label>
+        <select id="division" name="division" required <?php echo (count($divisiones) <= 1) ? 'style="display:none"' : ''; ?>>
+            <option value="" disabled>Seleccione una división</option>
+            <?php foreach ($divisiones as $division): ?>
+                <option value="<?php echo $division->division_id; ?>">
+                    <?php echo htmlspecialchars($division->nombre); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <label for="categoria" class="margen-izquierdo">Categoría:</label>
             <select id="categoria" name="categoria" required>
                 <option value="">Seleccione una categoría</option>
                 <?php foreach ($modulos as $modulo) : ?>
                     <option value="<?php echo $modulo->id; ?>"><?php echo htmlspecialchars($modulo->nombre); ?></option>
                 <?php endforeach; ?>
             </select>
-        </div>
+    </div>
     <div class="campo">
         <label for="short-description">Contexto: </label>
         <input type="text" id="short-description" name="short-description" placeholder="Resumen de la descripción">

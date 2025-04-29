@@ -5,7 +5,6 @@ class UsuarioDivision extends ActiveRecord {
     protected static $tabla = 'usuario_division';
     protected static $columnasDB = ['usuario_id', 'division_id'];
     
-    // No incluyas $id aquí ya que no existe en tu tabla
     public $usuario_id;
     public $division_id;
 
@@ -14,12 +13,12 @@ class UsuarioDivision extends ActiveRecord {
         $this->division_id = $args['division_id'] ?? null;
     }
 
-    // Sobreescribe el método crear para adaptarlo a tu esquema
-    public function crear() {
+    
+    public function crearUsuario() {
         // Sanitizar los datos
         $atributos = $this->sanitizarAtributos();
 
-        // Insertar en la base de datos (sin incluir ID)
+        // Insertar en la base de datos
         $query = "INSERT INTO " . static::$tabla . " (";
         $query .= join(', ', array_keys($atributos));
         $query .= ") VALUES ('"; 
@@ -31,7 +30,6 @@ class UsuarioDivision extends ActiveRecord {
         
         return [
            'resultado' => $resultado,
-           // No devolvemos insert_id ya que no hay auto-incremental
         ];
     }
 }

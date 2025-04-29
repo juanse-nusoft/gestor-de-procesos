@@ -51,13 +51,13 @@ table, th{
 }
 
 td {
-    height: 1rem; /* Fija la altura */
-    max-height: 1rem; /* Límite máximo de altura */
-    overflow: hidden; /* Oculta el contenido excedente */
-    text-overflow: ellipsis; /* Agrega "..." si el texto es muy largo */
-    white-space: nowrap; /* Evita saltos de línea */
-    text-align: left; /* Centra el texto horizontalmente */
-    line-height: 1rem; /* Ajusta la altura de línea para evitar desbordes */
+    height: 1rem;
+    max-height: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    line-height: 1rem;
     max-width: 15rem;
     padding: 1rem;
     font-size: 1.4rem;

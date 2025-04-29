@@ -1,40 +1,4 @@
-/*document.addEventListener('DOMContentLoaded', ()=>{
-    const estado = document.querySelector('.boton');
 
-    estado.addEventListener('click', (e) =>{
-        e.preventDefault();
-        
-        function actualizarDetallesSolucion(){
-            fetch('dashboard/soluciones/detalle', {
-                method: 'POST',
-                body: FormData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Éxito!',
-                        text: 'La solución se guardó correctamente',
-                        confirmButtonText: 'Aceptar'
-                    }).then(() => {
-                        if (data.redirect) {
-                            window.location.href = data.redirect; // Redirigir desde el cliente
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: data.message || 'Error al guardar',
-                        confirmButtonText: 'Aceptar'
-                    });
-                }
-            })
-        }
-    })
-})
-*/
 document.addEventListener('DOMContentLoaded', () => {
     const formulario = document.getElementById('formulario-solucion');
     

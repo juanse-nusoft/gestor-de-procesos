@@ -7,6 +7,8 @@
 }
 .contenedor-usuarios{
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 .section-usuarios{
     max-width: 25rem;
