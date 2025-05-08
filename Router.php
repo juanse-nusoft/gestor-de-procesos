@@ -42,13 +42,10 @@ class Router
     }
 
     public function render($view, $datos = [], $layout = 'layout') {
-        if (!class_exists('Model\Usuario')) {
-            require_once __DIR__ . '/../Models/Usuario.php';
-        }
         
         // Crear objeto Usuario desde sesión si existe
         $datos['usuario'] = isset($_SESSION['usuario']) 
-            ? new \Model\Usuario($_SESSION['usuario']) 
+            ? new \Model\User($_SESSION['usuario']) 
             : null;
     
         extract($datos);

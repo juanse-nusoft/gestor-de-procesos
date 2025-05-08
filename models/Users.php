@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class Usuario extends ActiveRecord{
+class User extends ActiveRecord{
     //Base de datos
     protected static $tabla = 'usuarios';
     protected static $columnasDB = ['id', 'nombre', 'apellido', 'email', 'telefono', 'admin', 'estado', 'token', 'password'];
@@ -41,7 +41,6 @@ class Usuario extends ActiveRecord{
     public function esAdmin(): bool {
         return (int)$this->admin === 1;
     }
-    //Mensajes de validación para la creación de una cuenta
 
     public function validarNuevaCuenta(): array{
     // Reiniciar alertas
@@ -109,27 +108,6 @@ class Usuario extends ActiveRecord{
 }
 public function validarLogin(): array
 {
-    // Reiniciar alertas
-    self::$alertas = ['error' => [], 'exito' => []];
-
-    // Validación del email
-    if (empty($this->email)) {
-        self::$alertas['error'][] = 'El email es obligatorio';
-    } else {
-        // Sanitizar el email
-        $this->email = filter_var($this->email, FILTER_SANITIZE_EMAIL);
-        
-        // Validar formato
-        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            self::$alertas['error'][] = 'El formato del email no es válido';
-        } else {
-            // Validar dominio específico de manera más segura
-            $dominio = substr(strrchr($this->email, "@"), 1);
-            if (strtolower($dominio) !== 'nusoft.com.co') {
-                self::$alertas['error'][] = 'Solo se permiten iniciar sesión con el correo corporativo';
-            }
-        }
-    }
 
     // Validación de la contraseña
     if (empty($this->password)) {
@@ -138,27 +116,38 @@ public function validarLogin(): array
         self::$alertas['error'][] = 'La contraseña debe tener al menos 8 caracteres';
     }
 
-    // Validar teléfono
-    if (empty($this->telefono)) {
-        self::$alertas['error'][] = 'El teléfono es obligatorio';
-    } elseif (!preg_match('/^[0-9]{10,15}$/', $this->telefono)) {
-        self::$alertas['error'][] = 'Formato de teléfono no válido';
-    }
-
     return self::$alertas;
 }
-
-public function validarEmail(): array
+public static function findByEmail(string $email): ?self
 {
-    // Reiniciar alertas
-    self::$alertas = ['error' => [], 'exito' => []];
+    // Sanitizar el email
+    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
-    // Validar presencia y formato básico
-    if (empty($this->email)) {
-        self::$alertas['error'][] = 'El email es obligatorio';
-        return self::$alertas;
+    // Validar formato
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return null;
     }
 
+    // Consulta SQL segura
+    $query = "SELECT * FROM " . static::$tabla . " WHERE email = ? LIMIT 1";
+    
+    $stmt = self::$db->prepare($query);
+    if (!$stmt) {
+        throw new RuntimeException("Error al preparar consulta: " . self::$db->error);
+    }
+
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        return null;
+    }
+
+    return static::createObject($result->fetch_assoc());
+}
+public function validarEmail(): array
+{
     // Sanitizar el email
     $this->email = filter_var($this->email, FILTER_SANITIZE_EMAIL);
 

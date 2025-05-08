@@ -1,11 +1,15 @@
 <?php
 
-$db = mysqli_connect('localhost', 'root', 'root', 'problemario');
+$host = 'localhost';
+$dbname = 'problemario';
+$username = 'root';
+$password = 'root';
 
-
-if (!$db) {
-    echo "Error: No se pudo conectar a MySQL.";
-    echo "errno de depuración: " . mysqli_connect_errno();
-    echo "error de depuración: " . mysqli_connect_error();
+try {
+    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Error de conexión: " . $e->getMessage();
     exit;
 }
+
