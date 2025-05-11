@@ -34,7 +34,6 @@ $usuario = isset($_SESSION['usuario']) ? new Usuario($_SESSION['usuario']) : nul
             <!-- Elementos para todos los usuarios -->
             <a href="/dashboard/soluciones"><i class='bx bx-notepad'></i><span>Soluciones</span></a>
             <!-- <a href="/dashboard/tareas"><i class='bx bxs-add-to-queue'></i><span>Tareas</span></a> -->
-            <a href="/dashboard/configuracion"><i class="bx bx-wrench icono-sidebar"></i><span>Configuración</span></a>
             <a href="/dashboard/usuarios/perfil"><i class="bx bx-user-circle icono-sidebar"></i><span>Cuenta</span></a>
             
             <?php if ($usuario && $usuario->esAdmin()): ?>
