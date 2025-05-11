@@ -55,6 +55,7 @@ $usuario = isset($_SESSION['usuario']) ? new Usuario($_SESSION['usuario']) : nul
     </div>
 
 <script src="/build/js/sidebar/sidebar.js"></script>
+<script src="/build/js/modo-oscuro.js"></script>
 <?php
     echo $script ?? '';
 ?>

@@ -8,6 +8,5 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.log('El usuario prefiere el modo claro');
     }
-
 });
 

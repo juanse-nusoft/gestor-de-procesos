@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",(()=>{window.matchMedia("(prefers-color-scheme: dark)").matches?document.body.classList.toggle("active"):console.log("El usuario prefiere el modo claro")}));
