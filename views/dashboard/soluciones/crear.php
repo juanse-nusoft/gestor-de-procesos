@@ -19,21 +19,30 @@
     <div class="campo">
         <label for="division" <?php echo (count($divisiones) <= 1) ? 'style="display:none"' : ''; ?>>División</label>
         <select id="division" name="division" required <?php echo (count($divisiones) <= 1) ? 'style="display:none"' : ''; ?>>
-            <option value="" disabled>Seleccione una división</option>
+            <option value="" disabled selected>Seleccione una división</option>
             <?php foreach ($divisiones as $division): ?>
                 <option value="<?php echo $division->division_id; ?>">
                     <?php echo htmlspecialchars($division->nombre); ?>
                 </option>
             <?php endforeach; ?>
         </select>
-
-        <label for="categoria" class="margen-izquierdo">Categoría:</label>
-            <select id="categoria" name="categoria" required>
-                <option value="">Seleccione una categoría</option>
-                <?php foreach ($modulos as $modulo) : ?>
-                    <option value="<?php echo $modulo->id; ?>"><?php echo htmlspecialchars($modulo->nombre); ?></option>
-                <?php endforeach; ?>
-            </select>
+        <label for="categoria" class="margen-izquierdo">Categoría </label>
+        <select id="categoria" name="categoria" required>
+        <?php 
+        $categoriaActual = $solucion[0]->categories ?? null;
+        $mostrarTodas = true; 
+        
+        if ($mostrarTodas && !empty($modulos)): ?>
+            <?php foreach ($modulos as $modulo): ?>
+                <option value="<?= $modulo['id'] ?>"
+                    <?= ($categoriaActual == $modulo['id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($modulo['nombre']) ?>
+                </option>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <option value="" disabled selected>Categorías se cargarán al seleccionar división</option>
+        <?php endif; ?>
+    </select>
     </div>
     <div class="campo">
         <label for="short-description">Contexto: </label>

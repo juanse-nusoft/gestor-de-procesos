@@ -194,6 +194,7 @@ class SolucionesController {
     
         header('Content-Type: application/json'); // Siempre devolver JSON
     
+        //debuguear($_POST);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 // Validar campos obligatorios
@@ -203,10 +204,11 @@ class SolucionesController {
                 }
                 
                 
-                $id = ($_POST['id']);
+                //$id = ($_POST['id']);
                 $titulo = s($_POST['titulo']);
                 $categoria = $_POST['categoria'];
                 $descripcion = $_POST['descripcion'];
+                $division = $_POST['division'];
                 $video = s($_POST['video']);
                 $usuario_id = $_SESSION['usuario']['id'];
                 $short_description = $_POST['short-description'];
@@ -216,9 +218,9 @@ class SolucionesController {
 
                 // Crear y guardar la solución
                 $solucion = new Soluciones([
-                    'id' => $id,
                     'title' => $titulo,
                     'description' => $descripcion,
+                    'division' => $division,
                     'categories' => $categoria,
                     'video' => $video,
                     'usuario_id' => $usuario_id,

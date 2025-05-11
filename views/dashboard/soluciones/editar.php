@@ -19,14 +19,14 @@
 
         <label for="division" <?php echo (count($divisiones) <= 1) ? 'style="display:none"' : ''; ?>>División</label>
         <select id="division" name="division" required <?php echo (count($divisiones) <= 1) ? 'style="display:none"' : ''; ?>>
-        <option value="" disabled>Seleccione una división</option>
-        <?php foreach ($divisiones as $division): ?>
-            <option value="<?php echo $division->division_id; ?>"
-                <?php echo ($solucion[0]->division == $division->division_id) ? 'selected' : ''; ?>>
-                <?php echo htmlspecialchars($division->nombre); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
+            <option value="" disabled>Seleccione una división</option>
+            <?php foreach ($divisiones as $division): ?>
+                <option value="<?php echo $division->division_id; ?>"
+                    <?php echo ($solucion[0]->division == $division->division_id) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($division->nombre); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
  
         <label for="categoria" class="margen-izquierdo">Categoría </label>
         <select id="categoria" name="categoria" required>

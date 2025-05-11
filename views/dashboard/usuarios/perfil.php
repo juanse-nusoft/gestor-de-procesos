@@ -22,7 +22,7 @@
         </div>
         <div class="campo-corto-centrado">
             <p>Cambiar contraseña</p>
-            <div id="toggle-idioma" class="toggle-switch" data-action="idioma"></div>
+            <div id="toggle-password" class="toggle-switch" data-action="idioma"></div>
         </div>
         <button type="submit" class="boton">Actualizar</button>
     </form>

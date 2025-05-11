@@ -26,24 +26,31 @@ $usuario = isset($_SESSION['usuario']) ? new Usuario($_SESSION['usuario']) : nul
 
      <!-- Sidebar -->
      <div id="sidebar" class="sidebar">
-        <a href="#"><i id="toggleBtn" class="bx bx-menu"></i><span></span></a> 
-        <a href="/dashboard"><i class='bx bx-home icono-sidebar'></i><span>Inicio</span></a>
-        
-        <!-- Elementos para todos los usuarios -->
-        <a href="/dashboard/soluciones"><i class='bx bx-notepad'></i><span>Soluciones</span></a>
-        <!-- <a href="/dashboard/tareas"><i class='bx bxs-add-to-queue'></i><span>Tareas</span></a> -->
-        <a href="/dashboard/configuracion"><i class="bx bx-wrench icono-sidebar"></i><span>Configuración</span></a>
-        <a href="/dashboard/usuarios/perfil"><i class="bx bx-user-circle icono-sidebar"></i><span>Cuenta</span></a>
-        
-        <?php if ($usuario && $usuario->esAdmin()): ?>
-            <!-- Elementos solo para admin -->
-            <a href="/dashboard/usuarios"><i class="bx bx-user icono-sidebar"></i><span>Usuarios</span></a>
-            <a href="/dashboard/auditoria"><i class='bx bxs-show'></i><span>Auditoria</span></a>
-            <a href="/dashboard/categoria"><i class="fa-regular fa-folder-open"></i><span>Categorías</span></a>
-        <?php endif; ?>
-        
-    </div>
+        <div class="opciones">
 
+            <a href="#"><i id="toggleBtn" class="bx bx-menu"></i><span></span></a> 
+            <a href="/dashboard"><i class='bx bx-home icono-sidebar'></i><span>Inicio</span></a>
+            
+            <!-- Elementos para todos los usuarios -->
+            <a href="/dashboard/soluciones"><i class='bx bx-notepad'></i><span>Soluciones</span></a>
+            <!-- <a href="/dashboard/tareas"><i class='bx bxs-add-to-queue'></i><span>Tareas</span></a> -->
+            <a href="/dashboard/configuracion"><i class="bx bx-wrench icono-sidebar"></i><span>Configuración</span></a>
+            <a href="/dashboard/usuarios/perfil"><i class="bx bx-user-circle icono-sidebar"></i><span>Cuenta</span></a>
+            
+            <?php if ($usuario && $usuario->esAdmin()): ?>
+                <!-- Elementos solo para admin -->
+                <a href="/dashboard/usuarios"><i class="bx bx-user icono-sidebar"></i><span>Usuarios</span></a>
+                <a href="/dashboard/auditoria"><i class='bx bxs-show'></i><span>Auditoria</span></a>
+                <a href="/dashboard/categoria"><i class="fa-regular fa-folder-open"></i><span>Categorías</span></a>
+            <?php endif; ?>
+        </div>
+        
+        
+        <div class="modo-oscuro">
+            <i class='bx bx-sun modo-claro'></i>
+            <i class='bx bxs-moon modo-oscuro' ></i>
+        </div>        
+    </div>
     <div id="main">
         <?php echo $contenido; ?>
     </div>

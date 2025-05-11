@@ -138,13 +138,6 @@ public function validarLogin(): array
         self::$alertas['error'][] = 'La contraseña debe tener al menos 8 caracteres';
     }
 
-    // Validar teléfono
-    if (empty($this->telefono)) {
-        self::$alertas['error'][] = 'El teléfono es obligatorio';
-    } elseif (!preg_match('/^[0-9]{10,15}$/', $this->telefono)) {
-        self::$alertas['error'][] = 'Formato de teléfono no válido';
-    }
-
     return self::$alertas;
 }
 

@@ -13,6 +13,8 @@
     z-index: 1000;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+
     align-items: center;
     padding-top: 20px;
 }
@@ -67,4 +69,22 @@
     max-width: 50px;
     font-size: 3rem;
     margin: 0 auto;
+}
+.modo-oscuro {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+.modo-oscuro i {
+    cursor: pointer;
+    color: white;
+    transition: color 0.3s;
+}
+.modo-oscuro i:hover {
+    cursor: pointer;
+    color: white;
+    transition: color 0.3s;
+    transform: scale(1.2);
 }

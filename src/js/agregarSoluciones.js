@@ -1,4 +1,45 @@
 document.addEventListener('DOMContentLoaded', (e) => {
+
+
+    const divisionSelect = document.getElementById('division');
+    const categoriaSelect = document.getElementById('categoria');
+    
+    // Cargar categorías al cambiar división
+    divisionSelect.addEventListener('change', function() {
+        const divisionId = this.value;
+        
+        categoriaSelect.innerHTML = '<option value="" disabled>Cargando...</option>';
+        categoriaSelect.disabled = true;
+        
+        fetch(`/dashboard/soluciones/get-categorias?division_id=${divisionId}`)
+            .then(response => response.json())
+            .then(categorias => {
+                categoriaSelect.innerHTML = '<option value="" disabled>Seleccione categoría</option>';
+                
+                categorias.forEach(cat => {
+                    const option = new Option(cat.nombre, cat.id);
+                    
+                    // Mantener selección actual si coincide
+                    if (cat.id = '<?= json_encode($solucion[0]->categories ?? null) ?>') {
+                        option.selected = true;
+                    }
+                    
+                    categoriaSelect.appendChild(option);
+                });
+                
+                categoriaSelect.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                categoriaSelect.innerHTML = '<option value="" disabled>Error al cargar</option>';
+            });
+    });
+    
+    // Disparar cambio si ya hay una división seleccionada
+    if (divisionSelect.value) {
+        divisionSelect.dispatchEvent(new Event('change'));
+    }
+
     let quill = new Quill('#editor', {
         theme: 'snow',
         modules: {

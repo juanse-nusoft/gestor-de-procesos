@@ -17,7 +17,7 @@
                         <option value="">Todas las divisiones</option>
                         <?php foreach ($divisiones as $division): ?>
                             <option value="<?= $division->division_id ?>"
-                                <?= ($divisionId == $division->division_id) ? 'selected' : '' ?>>
+                            >
                                 <?= htmlspecialchars($division->nombre) ?>
                             </option>
                         <?php endforeach; ?>
