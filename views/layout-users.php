@@ -43,12 +43,7 @@ $usuario = isset($_SESSION['usuario']) ? new Usuario($_SESSION['usuario']) : nul
                 <a href="/dashboard/categoria"><i class="fa-regular fa-folder-open"></i><span>Categorías</span></a>
             <?php endif; ?>
         </div>
-        
-        
-        <div class="modo-oscuro">
-            <i class='bx bx-sun modo-claro'></i>
-            <i class='bx bxs-moon modo-oscuro' ></i>
-        </div>        
+               
     </div>
     <div id="main">
         <?php echo $contenido; ?>

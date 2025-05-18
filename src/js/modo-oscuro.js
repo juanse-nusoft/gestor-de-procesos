@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modoOscuro.matches) {
         document.body.classList.toggle('active');
     } else {
-        console.log('El usuario prefiere el modo claro');
+        console.log('La preferencia de color en el navegador es clara');
     }
 });
 

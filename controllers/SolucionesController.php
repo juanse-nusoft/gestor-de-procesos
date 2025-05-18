@@ -8,6 +8,7 @@ use Model\Soluciones;
 use Model\Usuario;
 
 class SolucionesController {
+
     public static function soluciones(Router $router) {
     if (!isset($_SESSION)) session_start();
     isAuth();
@@ -67,7 +68,7 @@ class SolucionesController {
     
     // Detectar si es petición Fetch (AJAX)
     $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-              strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     
     if ($isAjax) {
         ob_start();
@@ -242,11 +243,10 @@ class SolucionesController {
     }
 
     public static function upload() {
-        header('Content-Type: application/json'); // Asegurar el tipo de respuesta
+        header('Content-Type: application/json');
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $json = file_get_contents('php://input');
             $data = json_decode($json, true);
-    
             if (!isset($data['file'])) {
                 echo json_encode(['success' => false, 'message' => 'No image received']);
                 return;

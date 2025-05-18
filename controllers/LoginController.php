@@ -46,7 +46,8 @@ class LoginController {
                             'email' => $usuario->email,
                             'admin' => (int)$usuario->admin,
                             'login_time' => time(),
-                            'division' => $usuario->obtenerDivisiones($usuario->id)
+                            'division' => $usuario->obtenerDivisiones($usuario->id),
+                            'profile_photo' => $usuario->profile_photo
                         ];
     
                         // se redirige al usuario a la página de inicio después de iniciar sesión

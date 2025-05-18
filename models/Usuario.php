@@ -5,7 +5,7 @@ namespace Model;
 class Usuario extends ActiveRecord{
     //Base de datos
     protected static $tabla = 'usuarios';
-    protected static $columnasDB = ['id', 'nombre', 'apellido', 'email', 'telefono', 'admin', 'estado', 'token', 'password'];
+    protected static $columnasDB = ['id', 'nombre', 'apellido', 'email', 'telefono', 'admin', 'estado', 'token', 'password', 'profile_photo'];
 
     public $id;
     public $nombre;
@@ -16,6 +16,7 @@ class Usuario extends ActiveRecord{
     public $estado;
     public $token;
     public $password;
+    public $profile_photo;
 
     public function __construct($args = []){
         $this->id = $args['id'] ?? null;
@@ -27,6 +28,7 @@ class Usuario extends ActiveRecord{
         $this->admin = $args['admin'] ?? 0;
         $this->estado = $args['estado'] ?? '1';
         $this->token = $args['token'] ?? '';
+        $this->profile_photo = $args['profile_photo'] ?? '/perfil/default.png';
     }
     
     public function toSessionArray(): array {
@@ -383,5 +385,39 @@ public function obtenerDivisiones(): array{
     public function esAdminConDivisiones() {
         return $this->admin == 1 && !empty($this->obtenerDivisiones());
     }
+
+    public function actualizarImagenPerfil($rutaImagen = '') {
+    // Asignar la nueva ruta
+    $this->profile_photo = $rutaImagen;
     
+    // Guardar solo el campo de imagen (actualización parcial)
+    return $this->guardar(['imagen']);
+}
+
+public static function actualizarPerfil($id, $datos) {
+    $usuario = self::find($id);
+    if (!$usuario) {
+        return ['success' => false, 'message' => 'Usuario no encontrado'];
+    }
+
+    if (empty($datos['nombre']) || empty($datos['apellido'])) {
+        return ['success' => false, 'message' => 'Nombre y apellido son obligatorios'];
+    }
+
+    $usuario->nombre = $datos['nombre'];
+    $usuario->apellido = $datos['apellido'];
+
+    if (!empty($datos['password'])) {
+        $usuario->password = password_hash($datos['password'], PASSWORD_DEFAULT);
+    }
+
+    $exito = $usuario->guardar();
+
+    if ($exito) {
+        return ['success' => true, 'message' => 'Perfil actualizado correctamente'];
+    } else {
+        return ['success' => false, 'message' => 'Error al guardar en la base de datos'];
+    }
+}
+
 } 
