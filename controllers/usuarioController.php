@@ -7,26 +7,30 @@ use MVC\Router;
 
 class usuarioController{
     public static function usuario(Router $router){
-        if(!isset($_SESSION)){
-            session_start();
-        }
-        isAuth();
-
-        $usuarios = Usuario::all();
-
-        $query = $_GET['query'] ?? '';
-        $estado = $_GET['estado'] ?? '';
-
-        //debuguear($estado);
-        if($query || $estado){
-            $usuarios = Usuario::buscarUsuario($query, $estado);
-        }
-        
-
-        $router->render('dashboard/usuarios/all', [
-            'usuarios' => $usuarios
-        ], 'layout-users');
+    if(!isset($_SESSION)){
+        session_start();
     }
+    isAuth();
+
+    $usuarios = Usuario::all();
+
+    $query = $_GET['query'] ?? '';
+    $estado = $_GET['estado'] ?? '';
+
+    if($query || $estado){
+        $usuarios = Usuario::buscarUsuario($query, $estado);
+    }
+
+    // Asignar divisiones a cada usuario
+    foreach ($usuarios as $usuario) {
+        $usuario->divisiones = $usuario->obtenerDivisiones();
+    }
+
+    $router->render('dashboard/usuarios/all', [
+        'usuarios' => $usuarios
+    ], 'layout-users');
+}
+
 
     public static function Perfil(Router $router){
         if(!isset($_SESSION)){

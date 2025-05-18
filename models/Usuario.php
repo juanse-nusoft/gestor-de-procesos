@@ -17,6 +17,8 @@ class Usuario extends ActiveRecord{
     public $token;
     public $password;
     public $profile_photo;
+    public array $divisiones = [];
+
 
     public function __construct($args = []){
         $this->id = $args['id'] ?? null;
@@ -304,9 +306,12 @@ protected function esPasswordComun(): bool
     $query = "SELECT * FROM " . static::$tabla . " 
               WHERE (nombre LIKE CONCAT('%', ?, '%') 
               OR apellido LIKE CONCAT('%', ?, '%') 
-              OR email LIKE CONCAT('%', ?, '%')";
+              OR email LIKE CONCAT('%', ?, '%'))";
     
+    
+
     $params = [$termino, $termino, $termino];
+    
     $types = 'sss'; // 3 strings
 
     // Agregar condición de estado si existe
@@ -319,9 +324,10 @@ protected function esPasswordComun(): bool
         $params[] = $estado;
         $types .= 's';
     }
-
+    
     // Ejecutar consulta preparada
     $stmt = self::$db->prepare($query);
+
     if (!$stmt) {
         throw new RuntimeException("Error al preparar consulta: " . self::$db->error);
     }
