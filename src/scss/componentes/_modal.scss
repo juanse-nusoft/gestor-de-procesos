@@ -1,3 +1,6 @@
+@use "sass:color";
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
 /* Estilos del modal */
 .modal {
     display: none;
@@ -36,8 +39,8 @@
 }
 
 .modal-header {
-    padding: 20px;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    padding: 1rem;
+    background-color: v.$verdePrincipal;
     color: white;
     text-align: center;
     position: relative;
@@ -59,13 +62,15 @@
 }
 
 .modal-body {
-    padding: 25px;
+    padding-left: 20px;
+    padding-top: 5px;
 }
 
 .info-row {
     display: flex;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     align-items: center;
+    padding-left: 1rem;
 }
 
 .info-label {
@@ -103,7 +108,7 @@
 }
 
 .modal-btn.editar {
-    background-color: #6e8efb;
+    background-color: v.$verdeSecundario;
     color: white;
 }
 
@@ -135,4 +140,154 @@
 
 .ver-mas:active {
     transform: scale(0.95);
+}
+/* Badges */
+.badges-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge.admin {
+    background-color: #4a6cf7;
+    color: white;
+}
+
+.badge.activo {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.badge.inactivo {
+    background-color: #f44336;
+    color: white;
+}
+
+.badge.normal {
+    background-color: #607d8b;
+    color: white;
+}
+
+/* Secciones del modal */
+.info-section {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.info-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    color: #6e8efb;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.section-title::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background-color: #6e8efb;
+    margin-right: 8px;
+    border-radius: 2px;
+}
+
+/* Lista de divisiones */
+.divisiones-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    padding-left: 1rem;
+}
+
+.divisiones-list li {
+    background-color: #d1d5e4;
+    color: #4a6cf7;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    border: 1px solid #e0e5ff;
+}
+/* Estilos para el formulario de edición */
+.modal-form {
+    padding: 0 1rem;
+}
+
+.form-group {
+    margin-bottom: .5rem;
+
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #555;
+}
+.form-group input{
+    padding: 1rem;;
+}
+.form-group input,
+.form-group select {
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.3rem;
+    transition: border 0.3s;
+    border: 1px solid #6e8ffb00;
+}
+.form-group input:hover,
+.form-group select:hover {
+    border: 1px solid #6e8efb;
+    outline: none;
+}
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #6e8efb;
+    outline: none;
+}
+
+.divisiones-checkbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.division-checkbox-item {
+    display: flex;
+    align-items: center;
+}
+
+.division-checkbox-item input {
+    width: auto;
+    margin-right: 8px;
+}
+
+/* Estilos para los botones del modal de edición */
+.modal-btn.guardar {
+    background-color: v.$verdeSecundario;
+    color: white;
+}
+
+.modal-btn.guardar:hover {
+    background-color: v.$verdePrincipal;
+    color: white;
 }

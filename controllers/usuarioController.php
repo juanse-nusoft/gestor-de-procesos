@@ -189,4 +189,31 @@ class usuarioController{
     echo json_encode(['success' => false, 'error' => 'Método no permitido']);
     exit;
 }
+
+public static function updateInfoUser() {
+    header('Content-Type: application/json');
+    
+    if(!isset($_SESSION)) {
+        session_start();
+    }
+    isAuth();
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+        exit;
+    }
+
+    $idUsuario = $_POST['id_usuario'] ?? null;
+    $datos = [
+        'nombre' => $_POST['nombre'] ?? null,
+        'apellido' => $_POST['apellido'] ?? null,
+        'email' => $_POST['email'] ?? null,
+        'telefono' => $_POST['telefono'] ?? null,
+        'estado' => $_POST['estado'] ?? null,
+        'rol' => $_POST['rol'] ?? null
+    ];
+
+    $resultado = Usuario::actualizarUsuario($idUsuario, $datos);
+    echo json_encode($resultado);
+}
 }

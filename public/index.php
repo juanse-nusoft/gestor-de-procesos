@@ -54,6 +54,7 @@ $router->get('/dashboard/usuarios/perfil', [usuarioController::class, 'perfil'])
 $router->post('/dashboard/usuarios/perfil', [usuarioController::class, 'updatePerfil']);
 $router->post('/dashboard/usuarios/upload-perfil', [usuarioController::class, 'uploadPerfil']);
 $router->post('/dashboard/usuarios/delete-perfil', [usuarioController::class, 'deletePerfil']);
+$router->post('/dashboard/usuarios/update-user', [usuarioController::class, 'updateInfoUser']);
 
 //TAREAS
 $router->get('/dashboard/tareas', [tareasController::class, 'tarea']);
