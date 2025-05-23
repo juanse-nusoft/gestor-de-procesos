@@ -1,1 +1,0 @@
-import{validarEmail,validarClave}from"/build/js/formularios/validaciones.js";document.addEventListener("DOMContentLoaded",(function(){const a=document.getElementById("formularioEnviar");a.addEventListener("submit",(e=>{e.preventDefault();const i=validarClave(),t=validarEmail();i&&t&&a.submit()}))}));

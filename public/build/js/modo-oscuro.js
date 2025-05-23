@@ -1,1 +1,0 @@
-document.addEventListener("DOMContentLoaded",(()=>{window.matchMedia("(prefers-color-scheme: dark)").matches?document.body.classList.toggle("active"):console.log("La preferencia de color en el navegador es clara")}));
